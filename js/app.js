@@ -1,4 +1,4 @@
-var rootURL = "http://localhost/studentmanagment/api/books";
+var rootURL = "http://localhost/studentmanagment/api/cars";
 
 function addDataToTableRow(isbn, title, author, publisher, publishdate, price) {
 

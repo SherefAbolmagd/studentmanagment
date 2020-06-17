@@ -333,17 +333,17 @@ function updateColor($modelNumber)
 		file_put_contents($file, $errorMessage);
 	}
 }
-/////
-function deleteBook($isbn)
+// deleting the car fromt the database (using the car model number)
+function deleteCar($modelNumber)
 {
 	$sql = "DELETE
-				FROM books
-				WHERE isbn = :isbn";
+				FROM cars
+				WHERE modelNumber = :modelNumber";
 
 	try {
 		$db = getConnection();
 		$stmt = $db->prepare($sql);
-		$stmt->bindParam("isbn", $isbn);
+		$stmt->bindParam("modelNumber", $modelNumber);
 		$stmt->execute();
 		$db = null;
 
@@ -354,68 +354,70 @@ function deleteBook($isbn)
 	}
 }
 
-function findByName($query)
-{
-	$sql = "SELECT *
-				FROM student
-				WHERE name LIKE :query
-				ORDER BY name";
+//not sure if this has to be in our project!
 
-	try {
-		$db = getConnection();
-		$stmt = $db->prepare($sql);
-		$query = "%" . $query . "%";
-		$stmt->bindParam("query", $query);
-		$stmt->execute();
+//function findByName($query)
+//{
+//	$sql = "SELECT *
+//				FROM student
+//				WHERE name LIKE :query
+//				ORDER BY name";
 
-		$row_count = $stmt->rowCount();
+//	try {
+//		$db = getConnection();
+//		$stmt = $db->prepare($sql);
+//		$query = "%" . $query . "%";
+//		$stmt->bindParam("query", $query);
+//		$stmt->execute();
 
-		if (count($row_count)) {
-			$data = array();
+//		$row_count = $stmt->rowCount();
 
-			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				//create Student object
-				//put std data in Model (Student Object)
-				$std = new User();
-				$std->matriks = $row['matriks'];
-				$std->name = $row['name'];
-				$std->age = $row['age'];
+//		if (count($row_count)) {
+//			$data = array();
 
-				array_push($data, $std);
-			}
+//			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+//				//create Student object
+//				//put std data in Model (Student Object)
+//				$std = new User();
+//				$std->matriks = $row['matriks'];
+//				$std->name = $row['name'];
+//				$std->age = $row['age'];
 
-			$db = null;
-			echo json_encode($data);
-		} else {
-			$db = null;
-			$data = array();
-			echo json_encode($data);
-		}
-	} catch (PDOException $e) {
-		echo '{"error":{"text":' . $e->getMessage() . '}}';
-	}
-}
+//				array_push($data, $std);
+//			}
 
-function getStudentByMatriks($matriks)
-{
-	$sql = "SELECT *
-				FROM student WHERE matriks = :matriks";
-	try {
-		$db = getConnection();
-		$stmt = $db->prepare($sql);
-		$stmt->bindParam("matriks", $matriks);
-		$stmt->execute();
+//			$db = null;
+//			echo json_encode($data);
+//		} else {
+//			$db = null;
+//			$data = array();
+//			echo json_encode($data);
+//		}
+//	} catch (PDOException $e) {
+//		echo '{"error":{"text":' . $e->getMessage() . '}}';
+//	}
+//}
 
-		$row_count = $stmt->rowCount();
+//function getStudentByMatriks($matriks)
+//{
+//	$sql = "SELECT *
+//				FROM student WHERE matriks = :matriks";
+//	try {
+//		$db = getConnection();
+//		$stmt = $db->prepare($sql);
+//		$stmt->bindParam("matriks", $matriks);
+//		$stmt->execute();
 
-		if ($row_count == 1)
-			echo json_encode(array("matriksExist" => "true"));
-		else if ($row_count == 0)
-			echo json_encode(array("matriksExist" => "false"));
-	} catch (PDOException $e) {
-		echo '{"error":{"text":' . $e->getMessage() . '}}';
-	}
-}
+//		$row_count = $stmt->rowCount();
+
+//		if ($row_count == 1)
+//			echo json_encode(array("matriksExist" => "true"));
+//		else if ($row_count == 0)
+//			echo json_encode(array("matriksExist" => "false"));
+//	} catch (PDOException $e) {
+//		echo '{"error":{"text":' . $e->getMessage() . '}}';
+//	}
+//}
 
 
 
@@ -430,13 +432,13 @@ $app->get('/hello/:name', function ($name) {
 	echo "Hello, $name";
 });
 
-//1 ) TODO change the route names to your new noun route.
+// api endpoints for the application.
 
 $app->post('/auth', 'doAuth'); //authentication and token generation
-$app->get('/books', 'getBooks'); //select all book
-$app->post('/books', 'addBook'); //insert book
-$app->put('/books/:isbn', 'updateBook'); //update whole book via isbn
-$app->put('/books/updateauthor/:isbn', 'updateAuthor'); //update book author via id
-$app->delete('/books/:isbn',	'deleteBook'); //delete book via isbn
+$app->get('/cars', 'getCars'); //select all book
+$app->post('/cars', 'addCar'); //insert book
+$app->put('/books/:modelNumber', 'updateCar'); //update whole book via isbn
+$app->put('/books/updatecolor/:modelNumber', 'updateColor'); //update book author via id
+$app->delete('/books/:modelNumber',	'deleteCar'); //delete book via isbn
 
 $app->run();
