@@ -27,12 +27,13 @@ class Car
 	var $topSpeed;
 }
 
+// setting up the database and providing a connection.
 function getConnection()
 {
 	$dbhost = "127.0.0.1";
 	$dbuser = "root";
 	$dbpass = "";
-	$dbname = "frontend";
+	$dbname = "studentmanagement";
 	$dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
 	$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 	$dbh->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
@@ -134,8 +135,8 @@ function getCars()
 				$data = array();
 
 				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-					//create books object
-					//put books data in Model (Books Object)
+					//Creating a new Car Object
+
 					$car = new Car();
 					$car->modelNumber = $row['modelNumber'];
 					$car->carName = $row['carName'];
@@ -239,7 +240,7 @@ function updateCar($modelNumber)
 		//////////////////////////////////////////////////////////////////
 		$body = $request->getBody();
 		$car = json_decode($body);
-		$sql = "UPDATE books
+		$sql = "UPDATE cars
 					SET carName = :carName,
 					    color = :color
 					    carType = :carType,
@@ -425,7 +426,7 @@ function deleteCar($modelNumber)
 
 $app = new \Slim\Slim();
 $app->get('/', function () {
-	echo "Welcome to new App";
+	echo "Welcome To the CAR Management System";
 });
 
 $app->get('/hello/:name', function ($name) {
@@ -437,8 +438,8 @@ $app->get('/hello/:name', function ($name) {
 $app->post('/auth', 'doAuth'); //authentication and token generation
 $app->get('/cars', 'getCars'); //select all book
 $app->post('/cars', 'addCar'); //insert book
-$app->put('/books/:modelNumber', 'updateCar'); //update whole book via isbn
-$app->put('/books/updatecolor/:modelNumber', 'updateColor'); //update book author via id
-$app->delete('/books/:modelNumber',	'deleteCar'); //delete book via isbn
+$app->put('/cars/:modelNumber', 'updateCar'); //update whole book via isbn
+$app->put('/cars/updatecolor/:modelNumber', 'updateColor'); //update book author via id
+$app->delete('/cars/:modelNumber',	'deleteCar'); //delete book via isbn
 
 $app->run();

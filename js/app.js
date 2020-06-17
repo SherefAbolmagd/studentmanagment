@@ -128,7 +128,7 @@ $(function () {
         routie('home');
       },
       error: function () {
-        alert("bla  bla while processing JSON file.");
+        alert("Had problems while processing JSON file.");
       }
     });
 
