@@ -1,4 +1,4 @@
-var rootURL = "http://localhost/frontend/api/books";
+var rootURL = "http://localhost/studentmanagment/api/books";
 
 function addDataToTableRow(isbn, title, author, publisher, publishdate, price) {
 
@@ -67,30 +67,27 @@ function editAuthorFormToJSON() {
   });
 }
 
-function getTDValue(trID, tdNumber)
-{
+function getTDValue(trID, tdNumber) {
   var tr = document.getElementById(trID);
   var td = tr.childNodes[tdNumber];
   return td.innerHTML;
 }
 
-function setTDValue(trID, tdNumber, tdValue)
-{
+function setTDValue(trID, tdNumber, tdValue) {
   var tr = document.getElementById(trID);
   var td = tr.childNodes[tdNumber];
   td.innerHTML = tdValue;
 }
 
-$(function(){
+$(function () {
 
-  $.ajaxPrefilter(function( options, oriOptions, jqXHR ) {
+  $.ajaxPrefilter(function (options, oriOptions, jqXHR) {
     jqXHR.setRequestHeader("AUTH-TOKEN", sessionStorage.authToken);
   });
 
   //check for auth-token
   //sessionStorage.authToken = "";
-  if (!sessionStorage.authToken)
-  {
+  if (!sessionStorage.authToken) {
     $("#logindiv").fadeIn(1000);
     $("#navmember").hide();
     $("#loggeddiv").hide();
@@ -103,16 +100,16 @@ $(function(){
     $("#username").html("Welcome " + sessionStorage.userName);
   }
 
-  $("#formlogin").submit(function(event){
+  $("#formlogin").submit(function (event) {
     event.preventDefault(); //prevent redirect/page refresh
 
     $.ajax({
       type: 'POST',
       contentType: 'application/json',
-      url: "http://localhost/frontend/api/auth",
+      url: "http://localhost/studentmanagment/api/auth",
       dataType: "json",
       data: loginFormToJSON(),
-      success: function(data) {
+      success: function (data) {
         sessionStorage.authToken = data.token;
         sessionStorage.userName = data.name;
         $("#logindiv").hide();
@@ -130,8 +127,8 @@ $(function(){
 
         routie('home');
       },
-      error: function() {
-        alert("An error occurred while processing JSON file.");
+      error: function () {
+        alert("bla  bla while processing JSON file.");
       }
     });
 
@@ -139,86 +136,76 @@ $(function(){
   });
 
   routie({
-      '': function() {
-        //this gets called when hash == #home
-        $("#wellcrud").hide();
-        $("#wellhome").fadeIn(1000);
-        $("#lihome").addClass("active");
-        $("#licrud").removeClass("active");
-        routie('');
-      },
-      'home': function() {
-        //this gets called when hash == #home
-        $("#wellcrud").hide();
-        $("#wellhome").fadeIn(1000);
-        $("#lihome").addClass("active");
-        $("#licrud").removeClass("active");
-      },
-      'crud': function() {
-        //this gets called when hash == #crud
-        $("#wellhome").hide();
-        $("#wellcrud").fadeIn(1000);
-        $("#licrud").addClass('active');
-        $("#lihome").removeClass('active');
+    '': function () {
+      //this gets called when hash == #home
+      $("#wellcrud").hide();
+      $("#wellhome").fadeIn(1000);
+      $("#lihome").addClass("active");
+      $("#licrud").removeClass("active");
+      routie('');
+    },
+    'home': function () {
+      //this gets called when hash == #home
+      $("#wellcrud").hide();
+      $("#wellhome").fadeIn(1000);
+      $("#lihome").addClass("active");
+      $("#licrud").removeClass("active");
+    },
+    'crud': function () {
+      //this gets called when hash == #crud
+      $("#wellhome").hide();
+      $("#wellcrud").fadeIn(1000);
+      $("#licrud").addClass('active');
+      $("#lihome").removeClass('active');
 
-        $("#isbn").val("");
-        $("#title").val("");
-        $("#author").val("");
-        $("#publisher").val("");
-        $("#publishdate").val("");
-        $("#price").val("");
+      $("#isbn").val("");
+      $("#title").val("");
+      $("#author").val("");
+      $("#publisher").val("");
+      $("#publishdate").val("");
+      $("#price").val("");
 
-        $("#tbl1 tbody").empty();
-        $.ajax({
-          //headers: {'AUTH-TOKEN': sessionStorage.authToken},
-          type: "GET",
-          url: rootURL,
-          dataType: "json",
-          success: function(data){
-            if (!data.error)
-            {
-              for (var x in data)
-              {
-                addDataToTableRow(data[x].isbn, data[x].title, data[x].author, data[x].publisher, data[x].publishdate, data[x].price);
-              }
+      $("#tbl1 tbody").empty();
+      $.ajax({
+        //headers: {'AUTH-TOKEN': sessionStorage.authToken},
+        type: "GET",
+        url: rootURL,
+        dataType: "json",
+        success: function (data) {
+          if (!data.error) {
+            for (var x in data) {
+              addDataToTableRow(data[x].isbn, data[x].title, data[x].author, data[x].publisher, data[x].publishdate, data[x].price);
             }
-            else {
-              bootbox.alert("Authentication Token Invalid!", function() {
-                $("#logindiv").fadeIn(1000);
-                $("#navmember").hide();
-                $("#loggeddiv").hide();
-                sessionStorage.removeItem('authToken');
-                sessionStorage.removeItem('userName');
-                routie('');
-              });
-            }
-          },
-          error: function() {
-            alert("An error occurred while processing JSON file. MAIN ERROR!!!!");
           }
-        });
+          else {
+            bootbox.alert("Authentication Token Invalid!", function () {
+              $("#logindiv").fadeIn(1000);
+              $("#navmember").hide();
+              $("#loggeddiv").hide();
+              sessionStorage.removeItem('authToken');
+              sessionStorage.removeItem('userName');
+              routie('');
+            });
+          }
+        },
+        error: function () {
+          alert("An error occurred while processing JSON file. MAIN ERROR!!!!");
+        }
+      });
 
-      }
+    }
   });
 
 
-	$("#crud").click(function(){
-		$("#wellhome").hide();
-   	$("#wellcrud").fadeIn(1000);
-   	$("#licrud").addClass('active');
-   	$("#lihome").removeClass('active');
+  $("#crud").click(function () {
+    $("#wellhome").hide();
+    $("#wellcrud").fadeIn(1000);
+    $("#licrud").addClass('active');
+    $("#lihome").removeClass('active');
     routie('crud');
   });
 
-  $("#home").click(function(){
-  	$("#wellcrud").hide();
-	  $("#wellhome").fadeIn(1000);
-	  $("#lihome").addClass("active");
-   	$("#licrud").removeClass("active");
-    routie('home');
-  });
-
-  $("#mainlink").click(function(){
+  $("#home").click(function () {
     $("#wellcrud").hide();
     $("#wellhome").fadeIn(1000);
     $("#lihome").addClass("active");
@@ -226,46 +213,52 @@ $(function(){
     routie('home');
   });
 
-  $("#btnhide").click(function(){
-    bootbox.confirm("Are you sure want to hide Hello?", function(result) {
-      if (result)
-      {
+  $("#mainlink").click(function () {
+    $("#wellcrud").hide();
+    $("#wellhome").fadeIn(1000);
+    $("#lihome").addClass("active");
+    $("#licrud").removeClass("active");
+    routie('home');
+  });
+
+  $("#btnhide").click(function () {
+    bootbox.confirm("Are you sure want to hide Hello?", function (result) {
+      if (result) {
         $("#hello").fadeOut(1000);
       }
     });
   });
 
-  $("#btnshow").click(function(){
-    bootbox.confirm("Are you sure want to show Hello?", function(result) {
-      if (result)
-      {
+  $("#btnshow").click(function () {
+    bootbox.confirm("Are you sure want to show Hello?", function (result) {
+      if (result) {
         $("#hello").fadeIn(1000);
       }
     });
   });
 
   //for delete
-  $("#tbl1").on("click", "span", function() {
+  $("#tbl1").on("click", "span", function () {
     //                     A        TD       TR
     var parentTR = $(this).parent().parent().parent();
     var firstTD = $(parentTR).children().eq(0);
     var isbn = $(firstTD).data("isbn");
 
-    bootbox.confirm("Are you sure?", function(answer) {
+    bootbox.confirm("Are you sure?", function (answer) {
       if (answer) {
 
         $.ajax({
           type: 'DELETE',
           url: rootURL + '/' + isbn,
           dataType: "json",
-          success: function(data){
-              var status = data.deleteStatus;
+          success: function (data) {
+            var status = data.deleteStatus;
 
-              if (status == "success")
-                $(parentTR).fadeOut("slow", "swing"); //.remove();
+            if (status == "success")
+              $(parentTR).fadeOut("slow", "swing"); //.remove();
           },
-          error: function() {
-           alert("An error occurred while processing JSON file.");
+          error: function () {
+            alert("An error occurred while processing JSON file.");
           }
         });
       }
@@ -273,13 +266,13 @@ $(function(){
   });
 
   //for mouseover
-  $("#tbl1").on("mouseenter", "td", function(e) {
+  $("#tbl1").on("mouseenter", "td", function (e) {
     var tdIndex = $(this).index();
     if (tdIndex == 2) {
       $(this).css('cursor', 'pointer');
       $(this).css('font-weight', 'bold');
     }
-  }).on("mouseleave", "td", function() {
+  }).on("mouseleave", "td", function () {
     var tdIndex = $(this).index();
     if (tdIndex == 2) {
       $(this).css('cursor', 'default');
@@ -287,7 +280,7 @@ $(function(){
     }
   });
 
-  $("#tbl1").on("click", "td", function(e) {
+  $("#tbl1").on("click", "td", function (e) {
 
     var tdIndex = $(this).index();
 
@@ -347,46 +340,45 @@ $(function(){
 
       bootbox.dialog({
         title: "Edit Author Name",
-        message:  '<form class="form-horizontal">' +
+        message: '<form class="form-horizontal">' +
 
-                  ' <div class="form-group">' +
-                  '   <label for="inputAuthorName" class="col-sm-2 control-label">Author Name</label>' +
-                  '   <div class="col-sm-10">' +
-                  '     <input type="text" class="form-control" id="inputAuthorName" name="inputAuthorName" value="' + authorName + '">' +
-                  '   </div>' +
-                  ' </div>' +
+          ' <div class="form-group">' +
+          '   <label for="inputAuthorName" class="col-sm-2 control-label">Author Name</label>' +
+          '   <div class="col-sm-10">' +
+          '     <input type="text" class="form-control" id="inputAuthorName" name="inputAuthorName" value="' + authorName + '">' +
+          '   </div>' +
+          ' </div>' +
 
-                  '</form>',
+          '</form>',
         buttons: {
-                  success: {
-                    label: "Save",
-                    className: "btn-success",
-                    callback: function () {
+          success: {
+            label: "Save",
+            className: "btn-success",
+            callback: function () {
 
-                      var isbn = $(firstTD).data("isbn");
+              var isbn = $(firstTD).data("isbn");
 
-                      $.ajax({
-                          type: 'PUT',
-                          contentType: 'application/json',
-                          url: rootURL + '/updateauthor/' + isbn,
-                          dataType: "json",
-                          data: editAuthorFormToJSON(),
-                          success: function(data){
+              $.ajax({
+                type: 'PUT',
+                contentType: 'application/json',
+                url: rootURL + '/updateauthor/' + isbn,
+                dataType: "json",
+                data: editAuthorFormToJSON(),
+                success: function (data) {
 
-                            if (data.updateStatus == "success")
-                            {
-                              var aName = $('#inputAuthorName').val();
-                              $(tdAuthorName).html(aName);
+                  if (data.updateStatus == "success") {
+                    var aName = $('#inputAuthorName').val();
+                    $(tdAuthorName).html(aName);
 
-                              $(firstTD).data("author", aName);
-                            }
-                          },
-                          error: function() {
-                            alert("An error occurred while processing JSON file.");
-                          }
-                        });
-                    }
+                    $(firstTD).data("author", aName);
                   }
+                },
+                error: function () {
+                  alert("An error occurred while processing JSON file.");
+                }
+              });
+            }
+          }
         }
       });
     }
@@ -396,13 +388,13 @@ $(function(){
   });
 
   //id="btnclosebookinfo"
-  $("#btnclosebookinfo").click(function(e){
+  $("#btnclosebookinfo").click(function (e) {
     $("#bookinfo").fadeOut(1000);
     e.preventDefault();
     return false; // prevent default click action from happening!
   });
 
-  $("#form1").submit(function(event){
+  $("#form1").submit(function (event) {
     event.preventDefault(); //prevent redirect/page refresh
 
     $.ajax({
@@ -411,56 +403,53 @@ $(function(){
       url: rootURL,
       dataType: "json",
       data: insertFormToJSON(),
-      success: function(data){
+      success: function (data) {
 
-          if (!data.error)
-          {
-            if (data.insertStatus == "success")
-            {
-              addDataToTableRow(data.isbn, data.title, data.author, data.publisher, data.publishdate, data.price);
+        if (!data.error) {
+          if (data.insertStatus == "success") {
+            addDataToTableRow(data.isbn, data.title, data.author, data.publisher, data.publishdate, data.price);
 
-              $("#isbn").val("");
-              $("#title").val("");
-              $("#author").val("");
-              $("#publisher").val("");
-              $("#publishdate").val("");
-              $("#price").val("");
+            $("#isbn").val("");
+            $("#title").val("");
+            $("#author").val("");
+            $("#publisher").val("");
+            $("#publishdate").val("");
+            $("#price").val("");
 
-              bootbox.alert("New book inserted!", function() {
-              });
-            }
-            else if (data.insertStatus == "failed")
-            {
-              bootbox.alert("REST operation error: " + data.errorMessage, function() {
-              });
-
-              $("#isbn").val("");
-              $("#title").val("");
-              $("#author").val("");
-              $("#publisher").val("");
-              $("#publishdate").val("");
-              $("#price").val("");
-            }
-          }
-          else {
-            bootbox.alert("Authentication Token Invalid!", function() {
-              $("#logindiv").fadeIn(1000);
-              $("#navmember").hide();
-              $("#loggeddiv").hide();
-              sessionStorage.removeItem('authToken');
-              sessionStorage.removeItem('userName');
-              routie('');
+            bootbox.alert("New book inserted!", function () {
             });
           }
+          else if (data.insertStatus == "failed") {
+            bootbox.alert("REST operation error: " + data.errorMessage, function () {
+            });
+
+            $("#isbn").val("");
+            $("#title").val("");
+            $("#author").val("");
+            $("#publisher").val("");
+            $("#publishdate").val("");
+            $("#price").val("");
+          }
+        }
+        else {
+          bootbox.alert("Authentication Token Invalid!", function () {
+            $("#logindiv").fadeIn(1000);
+            $("#navmember").hide();
+            $("#loggeddiv").hide();
+            sessionStorage.removeItem('authToken');
+            sessionStorage.removeItem('userName');
+            routie('');
+          });
+        }
       },
-      error: function() {
+      error: function () {
         alert("An error occurred while processing JSON file.");
       }
     });
   });
 
 
-  $("#frmedit").submit(function(event){
+  $("#frmedit").submit(function (event) {
     event.preventDefault(); //prevent redirect/page refresh
 
     var isbn = $("#inputEditIsbn").val();
@@ -471,13 +460,11 @@ $(function(){
       url: rootURL + '/' + isbn,
       dataType: "json",
       data: editFormToJSON(),
-      success: function(data){
-        if (!data.error)
-        {
+      success: function (data) {
+        if (!data.error) {
           ///////////////////////////////////////////////
-          if (data.updateStatus == "success")
-          {
-            bootbox.alert("Book Editing Success!", function() {
+          if (data.updateStatus == "success") {
+            bootbox.alert("Book Editing Success!", function () {
             });
 
             //get the tr - current ROW
@@ -500,16 +487,14 @@ $(function(){
             var thirdTD = $("#tr" + isbn).children().eq(2);
             $(thirdTD).html($("#inputEditAuthorName").val());
           }
-          else if (data.updateStatus == "failed")
-          {
-            bootbox.alert("REST operation error: " + data.errorMessage, function() {
+          else if (data.updateStatus == "failed") {
+            bootbox.alert("REST operation error: " + data.errorMessage, function () {
             });
           }
           ///////////////////////////////////////////////
         }
-        else
-        {
-          bootbox.alert("Authentication Token Invalid!", function() {
+        else {
+          bootbox.alert("Authentication Token Invalid!", function () {
             $("#logindiv").fadeIn(1000);
             $("#navmember").hide();
             $("#loggeddiv").hide();
@@ -519,13 +504,13 @@ $(function(){
           });
         }
       },
-      error: function() {
+      error: function () {
         alert("An error occurred while processing JSON file.");
       }
     });
   });
 
-  $("#hreflogout").click(function(){
+  $("#hreflogout").click(function () {
     $("#logindiv").fadeIn(1000);
     $("#navmember").hide();
     $("#loggeddiv").hide();
