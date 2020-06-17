@@ -1,0 +1,14 @@
+@charset "utf-8";
+/* CSS Document */
+body 
+{
+    background: url(../img/bg.jpg) no-repeat center center fixed; 
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+     
+    padding-top:55px;
+}
+
+

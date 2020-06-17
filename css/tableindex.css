@@ -1,0 +1,7 @@
+table {
+  counter-reset: id;
+}
+.index-column:before {
+  counter-increment: id;
+  content: counter(id);
+}
