@@ -62,7 +62,8 @@ function doAuth()
 		$stmt->execute();
 
 		$row_count = $stmt->rowCount();
-		if ($row_count) {
+		echo (json_encode($row_count));
+		if ($row_count != 0) {
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				//create user object
 				//put user data in Model (User Object)
@@ -101,40 +102,41 @@ function doAuth()
 				$arr = array("loginStatus" => "success", "token" => "$token", "login" => "$login", "name" => "$name", "usertype" => "$usertype");
 				//echo json_encode($arr);
 			}
+			$stmt = $db->query($sql1);
+			$stmt->execute();
+			$row_count = $stmt->rowCount();
+
+			if ($row_count) {
+				$data = array();
+
+				while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+					//Creating a new Car Object
+
+					$car = new Car();
+					$car->modelNumber = $row['modelNumber'];
+					$car->carName = $row['carName'];
+					$car->color = $row['color'];
+					$car->car_type = $row['carType'];
+					$car->tankCapacity = $row['tankCapacity'];
+					$car->topSpeed = $row['topSpeed'];
+
+					array_push($data, $car);
+				}
+				//send back the cars to the front-end!
+				$arr["cars"] = $data;
+				echo json_encode($arr);
+			} else {
+				$db = null;
+				$arr = array("error" => "No cars registered in the system");
+				echo json_encode($arr);
+			}
 		} else {
 			$db = null;
-			$arr = array("loginStatus" => "failed", "Login" => "$user.login");
+			$arr = array("loginStatus" => "failed");
 			echo json_encode($arr);
 		}
 		//now make the second query
-		$stmt = $db->query($sql1);
-		$stmt->execute();
-		$row_count = $stmt->rowCount();
 
-		if ($row_count) {
-			$data = array();
-
-			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-				//Creating a new Car Object
-
-				$car = new Car();
-				$car->modelNumber = $row['modelNumber'];
-				$car->carName = $row['carName'];
-				$car->color = $row['color'];
-				$car->car_type = $row['carType'];
-				$car->tankCapacity = $row['tankCapacity'];
-				$car->topSpeed = $row['topSpeed'];
-
-				array_push($data, $car);
-			}
-			//send back the cars to the front-end!
-			$arr["cars"] = $data;
-			echo json_encode($arr);
-		} else {
-			$db = null;
-			$arr = array("error" => "No cars registered in the system");
-			echo json_encode($arr);
-		}
 	} catch (PDOException $e) {
 		$file = 'error.txt';
 		file_put_contents($file, $e->getMessage());
