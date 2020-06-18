@@ -47,7 +47,10 @@ function doAuth()
 	$sql = "SELECT *
 			    FROM user
 			    WHERE login = :login
-			    AND password = :password";
+				AND password = :password";
+	$sql1 = "SELECT *
+          	FROM cars
+          	ORDER BY carName";
 
 	try {
 		$db = getConnection();
@@ -68,7 +71,7 @@ function doAuth()
 				$user->usertype = $row['usertype'];
 				$user->name = $row['name'];
 
-				$db = null;
+				//$db = null;
 
 				//create JWT token
 				$date = date_create();
@@ -96,11 +99,40 @@ function doAuth()
 				$name = $user->name;
 
 				$arr = array("loginStatus" => "success", "token" => "$token", "login" => "$login", "name" => "$name", "usertype" => "$usertype");
-				echo json_encode($arr);
+				//echo json_encode($arr);
 			}
 		} else {
 			$db = null;
-			$arr = array("loginStatus" => "failed");
+			$arr = array("loginStatus" => "failed", "Login" => "$user.login");
+			echo json_encode($arr);
+		}
+		//now make the second query
+		$stmt = $db->query($sql1);
+		$stmt->execute();
+		$row_count = $stmt->rowCount();
+
+		if ($row_count) {
+			$data = array();
+
+			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+				//Creating a new Car Object
+
+				$car = new Car();
+				$car->modelNumber = $row['modelNumber'];
+				$car->carName = $row['carName'];
+				$car->color = $row['color'];
+				$car->car_type = $row['carType'];
+				$car->tankCapacity = $row['tankCapacity'];
+				$car->topSpeed = $row['topSpeed'];
+
+				array_push($data, $car);
+			}
+			//send back the cars to the front-end!
+			$arr["cars"] = $data;
+			echo json_encode($arr);
+		} else {
+			$db = null;
+			$arr = array("error" => "No cars registered in the system");
 			echo json_encode($arr);
 		}
 	} catch (PDOException $e) {
