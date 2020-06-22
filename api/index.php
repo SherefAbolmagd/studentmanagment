@@ -51,10 +51,8 @@ function doAuth()
 	$sql1 = "SELECT *
           	FROM cars
           	ORDER BY carName";
-
+	//echo (json_encode($user));
 	try {
-		$db = getConnection();
-
 		$db = getConnection();
 		$stmt = $db->prepare($sql);
 		$stmt->bindParam("login", $user->login);
@@ -62,8 +60,7 @@ function doAuth()
 		$stmt->execute();
 
 		$row_count = $stmt->rowCount();
-		echo (json_encode($row_count));
-		if ($row_count != 0) {
+		if ($row_count) {
 			while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 				//create user object
 				//put user data in Model (User Object)

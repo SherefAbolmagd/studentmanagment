@@ -32,6 +32,7 @@ function addDataToTableRow(isbn, title, author, publisher, publishdate, price) {
 }
 
 function loginFormToJSON() {
+
   return JSON.stringify({
     "login": $('#inputLogin').val(),
     "password": $('#inputPassword').val()
@@ -102,14 +103,18 @@ $(function () {
 
   $("#formlogin").submit(function (event) {
     event.preventDefault(); //prevent redirect/page refresh
+    values = loginFormToJSON()
+    console.log(values);
 
     $.ajax({
       type: 'POST',
+      cache: false,
       contentType: 'application/json',
       url: "http://localhost/studentmanagment/api/auth",
       dataType: "json",
-      data: loginFormToJSON(),
+      data: values,
       success: function (data) {
+
         sessionStorage.authToken = data.token;
         sessionStorage.userName = data.name;
         $("#logindiv").hide();
@@ -128,7 +133,7 @@ $(function () {
         routie('home');
       },
       error: function () {
-        alert("Had problems while processing JSON file.");
+        alert("Anta sproblems while processing JSON file.");
       }
     });
 
