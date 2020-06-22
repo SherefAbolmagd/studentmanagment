@@ -116,7 +116,7 @@ function doAuth()
 					$car->modelNumber = $row['modelNumber'];
 					$car->carName = $row['carName'];
 					$car->color = $row['color'];
-					$car->car_type = $row['carType'];
+					$car->carType = $row['carType'];
 					$car->tankCapacity = $row['tankCapacity'];
 					$car->topSpeed = $row['topSpeed'];
 
@@ -175,7 +175,7 @@ function getCars()
 					$car->modelNumber = $row['modelNumber'];
 					$car->carName = $row['carName'];
 					$car->color = $row['color'];
-					$car->car_type = $row['carType'];
+					$car->carType = $row['carType'];
 					$car->tankCapacity = $row['tankCapacity'];
 					$car->topSpeed = $row['topSpeed'];
 
