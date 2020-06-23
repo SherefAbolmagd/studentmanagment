@@ -228,12 +228,12 @@ function addCar()
 
 			$data = array(
 				"insertStatus" => "success",
-				"isbn" => $car->modelNumber,
-				"title" => $car->carName,
-				"author" => $car->color,
-				"publisher" => $car->carType,
-				"publishdate" => $car->tankCapacity,
-				"price" => $car->topSpeed
+				"modelNumber" => $car->modelNumber,
+				"carName" => $car->carName,
+				"color" => $car->color,
+				"carType" => $car->carType,
+				"tankCapacity" => $car->tankCapacity,
+				"topSpeed" => $car->topSpeed
 			);
 
 			echo json_encode($data);
@@ -273,7 +273,7 @@ function updateCar($modelNumber)
 		$car = json_decode($body);
 		$sql = "UPDATE cars
 					SET carName = :carName,
-					    color = :color
+					    color = :color,
 					    carType = :carType,
 					    tankCapacity = :tankCapacity,
 					    topSpeed = :topSpeed					  
@@ -299,7 +299,6 @@ function updateCar($modelNumber)
 				"carType" => $car->carType,
 				"tankCapacity" => $car->tankCapacity,
 				"topSpeed" => $car->topSpeed
-
 			);
 
 			echo json_encode($data);

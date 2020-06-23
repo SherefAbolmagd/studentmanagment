@@ -11,17 +11,6 @@
   <link rel="icon" href="favicon.ico">
 
   <title>My Project</title>
-  <title>My Project</title>
-  <title>My Project</title>
-  <title>My Project</title>
-  <title>My Project</title>
-  <title>My Project</title>
-  <title>My Project</title>
-  <title>My Project</title>
-  <title>My Project</title>
-  <title>My Project</title>
-  <title>My Project</title>
-  <title>My Project</title>
 
   <!-- Bootstrap core CSS -->
   <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -124,29 +113,30 @@
 
           <form id="form1" name="form1" method="post">
             <div class="form-group">
-              <label for="isbn">ISBN</label>
-              <input type="text" class="form-control" id="isbn" name="isbn" placeholder="ISBN" required autofocus>
+              <label for="Model">Model</label>
+              <input type="text" class="form-control" id="Model" name="Model" placeholder="Model" required autofocus>
             </div>
             <div class="form-group">
-              <label for="title">Title</label>
-              <input type="text" class="form-control" id="title" name="title" placeholder="Title" required>
+              <label for="Name">Name</label>
+              <input type="text" class="form-control" id="Name" name="Name" placeholder="Name" required>
             </div>
             <div class="form-group">
-              <label for="author">Author</label>
-              <input type="text" class="form-control" id="author" name="author" placeholder="Author" required>
+              <label for="Color">Color</label>
+              <input type="text" class="form-control" id="Color" name="Color" placeholder="Color" required>
             </div>
             <div class="form-group">
-              <label for="publisher">Publisher</label>
-              <input type="text" class="form-control" id="publisher" name="publisher" placeholder="Publisher" required>
+              <label for="Type">Type</label>
+              <input type="text" class="form-control" id="Type" name="Type" placeholder="Type" required>
             </div>
             <div class="form-group">
-              <label for="publishdate">Publishing Date</label>
-              <input type="text" class="form-control" id="publishdate" name="publishdate" placeholder="Publishing Date"
+              <label for="Capacity">Capacity</label>
+              <input type="text" class="form-control" id="Capacity" name="Capacity" placeholder="Capacity"
                 required>
             </div>
             <div class="form-group">
-              <label for="price">Price</label>
-              <input type="text" class="form-control" id="price" name="price" placeholder="Price" required>
+              <label for="Speed">Speed</label>
+              <input type="text" class="form-control" id="Speed" name="Speed" placeholder="Speed"
+                required>
             </div>
             <button type="submit" class="btn btn-primary" id="btnsubmit">Submit</button>
           </form>
@@ -162,9 +152,12 @@
           <table class="table table-striped table-hover table-condensed" id="tbl1">
             <thead>
               <tr>
-                <th>Index</th>
-                <th>Title</th>
-                <th>Author</th>
+                <th>Model</th>
+                <th>Name</th>
+                <th>Color</th>
+                <th>Type</th>
+                <th>Capacity</th>
+                <th>Speed</th>
                 <th>Delete</th>
               </tr>
             </thead>
@@ -176,42 +169,42 @@
 
             <form class="form-horizontal" id="frmedit">
               <div class="form-group">
-                <label for="inputEditIsbn" class="col-sm-3 control-label">ISBN</label>
+                <label for="inputEditIsbn" class="col-sm-3 control-label">Model</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" id="inputEditIsbn" name="inputEditIsbn" disabled>
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="inputEditTitle" class="col-sm-3 control-label">Title</label>
+                <label for="inputEditTitle" class="col-sm-3 control-label">Name</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" id="inputEditTitle" name="inputEditTitle">
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="inputEditAuthorName" class="col-sm-3 control-label">Author</label>
+                <label for="inputEditAuthorName" class="col-sm-3 control-label">Color</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" id="inputEditAuthorName" name="inputEditAuthorName">
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="inputEditPublisher" class="col-sm-3 control-label">Publisher</label>
+                <label for="inputEditPublisher" class="col-sm-3 control-label">Type</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" id="inputEditPublisher" name="inputEditPublisher">
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="inputEditPublishingDate" class="col-sm-3 control-label">Publishing Date</label>
+                <label for="inputEditPublishingDate" class="col-sm-3 control-label">Capasity</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" id="inputEditPublishingDate" name="inputEditPublishingDate">
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="inputEditPrice" class="col-sm-3 control-label">Price</label>
+                <label for="inputEditPrice" class="col-sm-3 control-label">Speed</label>
                 <div class="col-sm-9">
                   <input type="text" class="form-control" id="inputEditPrice" name="inputEditPrice">
                 </div>

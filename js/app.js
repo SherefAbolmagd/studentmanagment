@@ -1,30 +1,45 @@
 var rootURL = "http://localhost/studentmanagment/api/cars";
 
-function addDataToTableRow(isbn, title, author, publisher, publishdate, price) {
+function addDataToTableRow(Model, Name, Color, Type, Capacity, Speed) {
 
-  var row = $.parseHTML("<tr id='tr" + isbn + "'></tr>");
+  var row = $.parseHTML("<tr id='" + Model + "'></tr>");
 
   var tdIndex = $.parseHTML("<td class='index-column'></td>");
-  $(tdIndex).data("isbn", isbn);
-  $(tdIndex).data("title", title);
-  $(tdIndex).data("author", author);
-  $(tdIndex).data("publisher", publisher);
-  $(tdIndex).data("publishdate", publishdate);
-  $(tdIndex).data("price", price);
+  $(tdIndex).data("Model", Model);
+  $(tdIndex).data("Name", Name);
+  $(tdIndex).data("Color", Color);
+  $(tdIndex).data("Type", Type);
+  $(tdIndex).data("Capacity", Capacity);
+  $(tdIndex).data("Speed", Speed);
 
-  var tdTitle = $.parseHTML('<td></td>');
-  $(tdTitle).html("<a href='#'>" + title + "</a>");
+  var Model1 = $.parseHTML('<td></td>');
+  $(Model1).html(Model);
 
-  var tdAuthor = $.parseHTML('<td></td>');
-  $(tdAuthor).html(author);
+  var Name1 = $.parseHTML('<td></td>');
+  $(Name1).html("<a href='#'>" + Name + "</a>");
+
+  var Color1 = $.parseHTML('<td></td>');
+  $(Color1).html("<a href='#'>" + Color + "</a>");
+
+  var Type1 = $.parseHTML('<td></td>');
+  $(Type1).html(Type);
+
+  var Capacity1 = $.parseHTML('<td></td>');
+  $(Capacity1).html(Capacity);
+
+  var Speed1 = $.parseHTML('<td></td>');
+  $(Speed1).html(Speed);
 
   var tdDelete = $.parseHTML('<td></td>');
   $(tdDelete).html("<a href='#'><span class='glyphicon glyphicon-trash' aria-hidden='true'></span></a>");
 
   //add col to row
-  $(row).append(tdIndex);
-  $(row).append(tdTitle);
-  $(row).append(tdAuthor);
+  $(row).append(Model1);
+  $(row).append(Name1);
+  $(row).append(Color1);
+  $(row).append(Type1);
+  $(row).append(Capacity1);
+  $(row).append(Speed1);
   $(row).append(tdDelete);
 
   //add row to table
@@ -41,30 +56,30 @@ function loginFormToJSON() {
 
 function insertFormToJSON() {
   return JSON.stringify({
-    "isbn": $('#isbn').val(),
-    "title": $('#title').val(),
-    "author": $('#author').val(),
-    "publisher": $('#publisher').val(),
-    "publishdate": $('#publishdate').val(),
-    "price": $('#price').val()
+    "modelNumber": $('#Model').val(),
+    "carName": $('#Name').val(),
+    "color": $('#Color').val(),
+    "carType": $('#Type').val(),
+    "tankCapacity": $('#Capacity').val(),
+    "topSpeed": $('#Speed').val(),
   });
 }
 
 function editFormToJSON() {
   return JSON.stringify({
-    "isbn": $('#inputEditIsbn').val(),
-    "title": $('#inputEditTitle').val(),
-    "author": $('#inputEditAuthorName').val(),
-    "publisher": $('#inputEditPublisher').val(),
-    "publishdate": $('#inputEditPublishingDate').val(),
-    "price": $('#inputEditPrice').val()
+    "modelNumber": $('#inputEditIsbn').val(),
+    "carName": $('#inputEditTitle').val(),
+    "color": $('#inputEditAuthorName').val(),
+    "carType": $('#inputEditPublisher').val(),
+    "tankCapacity": $('#inputEditPublishingDate').val(),
+    "topSpeed": $('#inputEditPrice').val()
   });
 }
 
 
 function editAuthorFormToJSON() {
   return JSON.stringify({
-    "author": $('#inputAuthorName').val()
+    "color": $('#color').val()
   });
 }
 
@@ -92,8 +107,7 @@ $(function () {
     $("#logindiv").fadeIn(1000);
     $("#navmember").hide();
     $("#loggeddiv").hide();
-  }
-  else {
+  } else {
     $("#logindiv").hide();
     $("#navmember").fadeIn(1000);
     $("#loggeddiv").fadeIn(1000);
@@ -104,7 +118,6 @@ $(function () {
   $("#formlogin").submit(function (event) {
     event.preventDefault(); //prevent redirect/page refresh
     values = loginFormToJSON()
-    console.log(values);
 
     $.ajax({
       type: 'POST',
@@ -122,6 +135,10 @@ $(function () {
         $("#loggeddiv").fadeIn(1000);
         $("#tokeninfo").html("REST Token: " + sessionStorage.authToken);
         $("#username").html("Welcome " + sessionStorage.userName);
+        // (data.cars).forEach(element => {
+        //   console.log(element.modelNumber);
+        //   addDataToTableRow(element.modelNumber,element.carName,element.color, element.carType,element.tankCapacity,element.topSpeed);
+        // });
 
         $("#isbn").val("");
         $("#title").val("");
@@ -179,10 +196,9 @@ $(function () {
         success: function (data) {
           if (!data.error) {
             for (var x in data) {
-              addDataToTableRow(data[x].isbn, data[x].title, data[x].author, data[x].publisher, data[x].publishdate, data[x].price);
+              addDataToTableRow(data[x].modelNumber, data[x].carName, data[x].color, data[x].carType, data[x].tankCapacity, data[x].topSpeed);
             }
-          }
-          else {
+          } else {
             bootbox.alert("Authentication Token Invalid!", function () {
               $("#logindiv").fadeIn(1000);
               $("#navmember").hide();
@@ -246,15 +262,14 @@ $(function () {
   $("#tbl1").on("click", "span", function () {
     //                     A        TD       TR
     var parentTR = $(this).parent().parent().parent();
-    var firstTD = $(parentTR).children().eq(0);
-    var isbn = $(firstTD).data("isbn");
-
+    var firstTD = $(parentTR);
+    var id = firstTD[0].id;
     bootbox.confirm("Are you sure?", function (answer) {
       if (answer) {
 
         $.ajax({
           type: 'DELETE',
-          url: rootURL + '/' + isbn,
+          url: rootURL + '/' + id,
           dataType: "json",
           success: function (data) {
             var status = data.deleteStatus;
@@ -296,41 +311,45 @@ $(function () {
     {
       $("#bookinfo").hide();
       //$("ol").empty();
-
+      
       //isbn
       //data attribute in 1st td
-      var isbn = $(firstTD).data("isbn");
+      var isbn = firstTD[0].innerHTML;
       //$("ol").append("<li>" + isbn + "</li>");
       $("#inputEditIsbn").val(isbn);
 
-
+      firstTD = $(parentTR).children().eq(1).children(0);
       //title
       //data attribute in 1st td
-      var title = $(firstTD).data("title");
+      var title = firstTD[0].innerHTML;
       //$("ol").append("<li>" + title + "</li>");
       $("#inputEditTitle").val(title);
 
+      firstTD = $(parentTR).children().eq(2).children(0);
       //author
       //data attribute in 1st td
-      var author = $(firstTD).data("author");
+      var author = firstTD[0].innerHTML;
       //$("ol").append("<li>" + author + "</li>");
       $("#inputEditAuthorName").val(author);
 
+      firstTD = $(parentTR).children().eq(3);
       //publisher
       //data attribute in 1st td
-      var publisher = $(firstTD).data("publisher");
+      var publisher = firstTD[0].innerHTML;
       //$("ol").append("<li>" + publisher + "</li>");
       $("#inputEditPublisher").val(publisher);
 
+      firstTD = $(parentTR).children().eq(4);
       //publishdate
       //data attribute in 1st td
-      var publishdate = $(firstTD).data("publishdate");
+      var publishdate = firstTD[0].innerHTML;
       //$("ol").append("<li>" + publishdate + "</li>");
       $("#inputEditPublishingDate").val(publishdate);
 
+      firstTD = $(parentTR).children().eq(5);
       //price
       //data attribute in 1st td
-      var price = $(firstTD).data("price");
+      var price = firstTD[0].innerHTML;
       //$("ol").append("<li>" + price + "</li>");
       $("#inputEditPrice").val(price);
 
@@ -340,17 +359,17 @@ $(function () {
 
     if (tdIndex == 2) //clicking author name
     {
-      var authorName = $(this).html();
+      var authorName = $(this).children(0).html();
       var tdAuthorName = this;
 
       bootbox.dialog({
-        title: "Edit Author Name",
+        title: "Edit Car Color",
         message: '<form class="form-horizontal">' +
 
           ' <div class="form-group">' +
-          '   <label for="inputAuthorName" class="col-sm-2 control-label">Author Name</label>' +
+          '   <label for="color" class="col-sm-2 control-label">Car Color</label>' +
           '   <div class="col-sm-10">' +
-          '     <input type="text" class="form-control" id="inputAuthorName" name="inputAuthorName" value="' + authorName + '">' +
+          '     <input type="text" class="form-control" id="color" name="color" value="' + authorName + '">' +
           '   </div>' +
           ' </div>' +
 
@@ -361,22 +380,24 @@ $(function () {
             className: "btn-success",
             callback: function () {
 
-              var isbn = $(firstTD).data("isbn");
+              var isbn = $(firstTD).html();
 
               $.ajax({
                 type: 'PUT',
                 contentType: 'application/json',
-                url: rootURL + '/updateauthor/' + isbn,
+                url: rootURL + '/updatecolor/' + isbn,
                 dataType: "json",
                 data: editAuthorFormToJSON(),
                 success: function (data) {
 
                   if (data.updateStatus == "success") {
-                    var aName = $('#inputAuthorName').val();
-                    $(tdAuthorName).html(aName);
+                    var color = $('#color').val();
+                    $(tdAuthorName).html(color);
 
-                    $(firstTD).data("author", aName);
+                    $(firstTD).data("color", color);
                   }
+
+                  location.reload();
                 },
                 error: function () {
                   alert("An error occurred while processing JSON file.");
@@ -412,31 +433,27 @@ $(function () {
 
         if (!data.error) {
           if (data.insertStatus == "success") {
-            addDataToTableRow(data.isbn, data.title, data.author, data.publisher, data.publishdate, data.price);
+            addDataToTableRow(data.modelNumber, data.carName, data.color, data.carType, data.tankCapacity, data.topSpeed);
 
-            $("#isbn").val("");
-            $("#title").val("");
-            $("#author").val("");
-            $("#publisher").val("");
-            $("#publishdate").val("");
-            $("#price").val("");
+            $("#Model").val("");
+            $("#Name").val("");
+            $("#Color").val("");
+            $("#Type").val("");
+            $("#Capacity").val("");
+            $("#Speed").val("");
 
-            bootbox.alert("New book inserted!", function () {
-            });
+            bootbox.alert("New book inserted!", function () {});
+          } else if (data.insertStatus == "failed") {
+            bootbox.alert("REST operation error: " + data.errorMessage, function () {});
+
+            $("#Model").val("");
+            $("#Name").val("");
+            $("#Color").val("");
+            $("#Type").val("");
+            $("#Capacity").val("");
+            $("#Speed").val("");
           }
-          else if (data.insertStatus == "failed") {
-            bootbox.alert("REST operation error: " + data.errorMessage, function () {
-            });
-
-            $("#isbn").val("");
-            $("#title").val("");
-            $("#author").val("");
-            $("#publisher").val("");
-            $("#publishdate").val("");
-            $("#price").val("");
-          }
-        }
-        else {
+        } else {
           bootbox.alert("Authentication Token Invalid!", function () {
             $("#logindiv").fadeIn(1000);
             $("#navmember").hide();
@@ -469,8 +486,7 @@ $(function () {
         if (!data.error) {
           ///////////////////////////////////////////////
           if (data.updateStatus == "success") {
-            bootbox.alert("Book Editing Success!", function () {
-            });
+            bootbox.alert("Car Editing Success!", function () {location.reload()});
 
             //get the tr - current ROW
             var trID = "tr" + isbn;
@@ -491,14 +507,12 @@ $(function () {
             //book author
             var thirdTD = $("#tr" + isbn).children().eq(2);
             $(thirdTD).html($("#inputEditAuthorName").val());
-          }
-          else if (data.updateStatus == "failed") {
-            bootbox.alert("REST operation error: " + data.errorMessage, function () {
-            });
+
+          } else if (data.updateStatus == "failed") {
+            bootbox.alert("REST operation error: " + data.errorMessage, function () {});
           }
           ///////////////////////////////////////////////
-        }
-        else {
+        } else {
           bootbox.alert("Authentication Token Invalid!", function () {
             $("#logindiv").fadeIn(1000);
             $("#navmember").hide();
