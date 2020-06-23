@@ -2,7 +2,7 @@ var rootURL = "http://localhost/studentmanagment/api/cars";
 
 function addDataToTableRow(Model, Name, Color, Type, Capacity, Speed) {
 
-  var row = $.parseHTML("<tr id='" + Model + "'></tr>");
+  var row = $.parseHTML("<tr style='color: " + Color + "' id='" + Model + "'></tr>");
 
   var tdIndex = $.parseHTML("<td class='index-column'></td>");
   $(tdIndex).data("Model", Model);
@@ -31,7 +31,7 @@ function addDataToTableRow(Model, Name, Color, Type, Capacity, Speed) {
   $(Speed1).html(Speed);
 
   var tdDelete = $.parseHTML('<td></td>');
-  $(tdDelete).html("<a href='#'><span class='glyphicon glyphicon-trash' aria-hidden='true'></span></a>");
+  $(tdDelete).html("<a href='#'><i class='fa fa-trash' style='font-size:25px;color:red'></i></a>");
 
   //add col to row
   $(row).append(Model1);
@@ -113,6 +113,7 @@ $(function () {
     $("#loggeddiv").fadeIn(1000);
     $("#tokeninfo").html("REST Authentication Token: " + sessionStorage.authToken);
     $("#username").html("Welcome " + sessionStorage.userName);
+    $("#nocars").html(sessionStorage.carnum);
   }
 
   $("#formlogin").submit(function (event) {
@@ -130,15 +131,13 @@ $(function () {
 
         sessionStorage.authToken = data.token;
         sessionStorage.userName = data.name;
+        sessionStorage.carnum = data.cars.length;
         $("#logindiv").hide();
         $("#navmember").fadeIn(1000);
         $("#loggeddiv").fadeIn(1000);
         $("#tokeninfo").html("REST Token: " + sessionStorage.authToken);
         $("#username").html("Welcome " + sessionStorage.userName);
-        // (data.cars).forEach(element => {
-        //   console.log(element.modelNumber);
-        //   addDataToTableRow(element.modelNumber,element.carName,element.color, element.carType,element.tankCapacity,element.topSpeed);
-        // });
+        $("#nocars").html(sessionStorage.carnum);
 
         $("#isbn").val("");
         $("#title").val("");
@@ -535,6 +534,7 @@ $(function () {
     $("#loggeddiv").hide();
     sessionStorage.removeItem('authToken');
     sessionStorage.removeItem('userName');
+    sessionStorage.removeItem('carnum');
     routie('');
   });
 });
